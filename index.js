@@ -1,14 +1,7 @@
-for (let file of [
-    `${__dirname}/build/Release/tera_network_crypto.node`,
-    `${__dirname}/bin/${process.arch}/tera_network_crypto_${process.versions.modules}.node`
-]) {
-    try {
-        module.exports = require(file);
-        return;
-    } catch (_) {
-        // Ignore
-    }
-}
+const fs = require('fs');
 
-console.log(`[toolbox] tera-network-crypto: No build found (arch=${process.arch}, modulesVer=${process.versions.modules}), using JS fallback!`);
-module.exports = require('./fallback');
+const file = `${__dirname}/bin/tera_network_crypto_${process.versions.modules}.node`;
+if (!fs.existsSync(file))
+    throw Error(`tera-network-crypto: No build found (platform=${process.versions.electron ? 'electron' : 'node'}, arch=${process.arch}, modulesVer=${process.versions.modules})`);
+
+module.exports = require(file);
